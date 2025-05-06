@@ -15,9 +15,9 @@ RUN uv pip install -r requirements.txt --system
 COPY Backend/ .
 
 # Copy and make entrypoint.sh executable
-COPY ./entrypoint.sh .
+COPY ./Backend/entrypoint.sh .
 RUN chmod +x entrypoint.sh
 
 EXPOSE 8000
 
-ENTRYPOINT ["./entrypoint.sh"]
+CMD ["./entrypoint.sh"]

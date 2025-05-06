@@ -9,6 +9,8 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
+from decouple import config
+import cloudinary
 
 from pathlib import Path
 import os
@@ -40,7 +42,12 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     # Local Apps
     "tattoo_shop",
+    # third part apps
+    'cloudinary',
+    'cloudinary_storage',
 ]
+
+
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -130,3 +137,14 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# Authentication
+AUTH_USER_MODEL = 'tattoo_shop.User'
+
+# Cloudinary configuration
+cloudinary.config(
+    cloud_name=config('CLOUDINARY_CLOUD_NAME'),
+    api_key=config('CLOUDINARY_API_KEY'),
+    api_secret=config('CLOUDINARY_API_SECRET'),
+    secure=True,  # Ensure HTTPS URLs
+)
