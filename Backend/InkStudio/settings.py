@@ -42,9 +42,14 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     # Local Apps
     "tattoo_shop",
+    "accounts",
     # third part apps
     'cloudinary',
     'cloudinary_storage',
+    'rest_framework',
+    'djoser',
+    "corsheaders",
+
 ]
 
 
@@ -52,6 +57,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -148,3 +154,55 @@ cloudinary.config(
     api_secret=config('CLOUDINARY_API_SECRET'),
     secure=True,  # Ensure HTTPS URLs
 )
+
+
+CORS_ALLOWED_ORIGINS= [
+    "http://localhost:3000",
+]
+
+# Email configurations
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = config('EMAIL_HOST')
+EMAIL_PORT = config('EMAIL_PORT')
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+
+# Djoser Authentication configurations
+DJOSER = {
+    'USER_ID_FIELD': 'id',
+    'LOGIN_FIELD' : 'email',
+    'USER_CREATE_PASSWORD_RETYPE': True,
+    'USERNAME_CHANGED_EMAIL_CONFIRMATION' : True,
+    'PASSWORD_CHANGED_EMAIL_CONFIRMATION' : True,
+    'SEND_CONFIRMATION_EMAIL' : True,
+    'PASSWORD_RESET_CONFIRM_URL': 'password/reset/confirm/{uid}/{token}',
+    'USERNAME_RESET_CONFIRM_URL': 'email/reset/confirm/{uid}/{token}',
+    'ACTIVATION_URL': 'activate/{uid}/{token}',
+    'SEND_ACTIVATION_EMAIL': True,
+    'SET_PASSWORD_RETYPE' : True,
+    'SET_USERNAME_RETYPE' : True,
+    'SERIALIZERS': {
+        'user_create': 'accounts.serializers.UserCreateSerializer',
+        'user_delete': 'djoser.serializers.UserDeleteSerializer',
+        'user': 'accounts.serializers.UserSerializer',
+        'current_user': 'accounts.serializers.UserSerializer',
+    },
+}
+
+SIMPLE_JWT = {
+   'AUTH_HEADER_TYPES': ('JWT',),
+} 
+
+
+# REST Framework settings
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+}
+
+

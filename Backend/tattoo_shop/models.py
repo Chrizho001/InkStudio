@@ -10,10 +10,12 @@ from cloudinary.models import CloudinaryField
 # Extending the Abstract user class which already comes with a typical user fields to avoid building from scratch
 class User(AbstractUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    email = models.EmailField(unique=True)
+    email = models.EmailField(unique=True, max_length=255)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     created_at = models.DateTimeField(auto_now_add=True)
+    
+
 
     # Required for AbstractUser: specify fields for username and email
     USERNAME_FIELD = "email"
