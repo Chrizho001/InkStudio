@@ -6,6 +6,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth/', include('djoser.urls')),  # Djoser endpoints
     path('auth/', include('djoser.urls.jwt')),  # JWT endpoints
-    path('ink_studio/api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),  # Get JWT
-    path('ink_studio/api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),  # Refresh JWT
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),  # Get JWT
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),  # Refresh JWT
 ]

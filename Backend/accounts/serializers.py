@@ -7,19 +7,19 @@ User = get_user_model()
 
 class UserCreateSerializer(UserCreateSerializer):
     password = serializers.CharField(max_length=68, min_length=6, write_only=True)
-    password2 = serializers.CharField(max_length=68, min_length=6, write_only=True)
+    re_password = serializers.CharField(max_length=68, min_length=6, write_only=True)
 
     class Meta(UserCreateSerializer.Meta):
         model = User
-        fields = ["email", "first_name", "last_name", "password", "password2"]
+        fields = ["email", "first_name", "last_name", "password", "re_password"]
 
     def validate(self, data):
-        if data["password"] != data["password2"]:
+        if data["password"] != data["re_password"]:
             raise serializers.ValidationError("passwords do not match")
         return data
 
     def create(self, validated_data):
-        validated_data.pop("password2")
+        validated_data.pop("re_password")
         user = User.objects.create_user(**validated_data)
         return user
 
