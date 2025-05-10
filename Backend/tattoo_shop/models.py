@@ -3,6 +3,8 @@ from django.db import models
 from cloudinary.models import CloudinaryField
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
+from django.contrib.auth import get_user_model
+
 
 
 
@@ -70,7 +72,7 @@ class Booking(models.Model):
     )
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user = models.ForeignKey("User", on_delete=models.CASCADE, related_name="bookings")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_bookings")
     artist = models.ForeignKey(
         Artist, on_delete=models.CASCADE, related_name="bookings"
     )
@@ -97,33 +99,33 @@ class Booking(models.Model):
         return f"Booking {self.id} for {self.user} with {self.artist}"
 
 
-class ArtistAvailability(models.Model):
-    id = models.BigAutoField(primary_key=True)
-    artist = models.ForeignKey(
-        Artist, on_delete=models.CASCADE, related_name="availabilities"
-    )
-    session_date = models.DateField()
-    start_time = models.TimeField()
-    end_time = models.TimeField()
-    is_booked = models.BooleanField(default=False)
+# class ArtistAvailability(models.Model):
+#     id = models.BigAutoField(primary_key=True)
+#     artist = models.ForeignKey(
+#         Artist, on_delete=models.CASCADE, related_name="availabilities"
+#     )
+#     session_date = models.DateField()
+#     start_time = models.TimeField()
+#     end_time = models.TimeField()
+#     is_booked = models.BooleanField(default=False)
 
-    class Meta:
-        indexes = [
-            models.Index(fields=["artist", "session_date", "start_time"]),
-        ]
-        constraints = [
-            models.UniqueConstraint(
-                fields=["artist", "session_date", "start_time"],
-                name="unique_availability_slot",
-            ),
-            models.CheckConstraint(
-                check=models.Q(end_time__gt=models.F("start_time")),
-                name="availability_end_time_after_start_time",
-            ),
-        ]
+#     class Meta:
+#         indexes = [
+#             models.Index(fields=["artist", "session_date", "start_time"]),
+#         ]
+#         constraints = [
+#             models.UniqueConstraint(
+#                 fields=["artist", "session_date", "start_time"],
+#                 name="unique_availability_slot",
+#             ),
+#             models.CheckConstraint(
+#                 check=models.Q(end_time__gt=models.F("start_time")),
+#                 name="availability_end_time_after_start_time",
+#             ),
+#         ]
 
-    def __str__(self):
-        return f"Availability for {self.artist} on {self.session_date} at {self.start_time}"
+#     def __str__(self):
+#         return f"Availability for {self.artist} on {self.session_date} at {self.start_time}"
 
 
 class Gallery(models.Model):
