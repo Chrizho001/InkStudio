@@ -3,6 +3,7 @@ from rest_framework import generics
 from .models import Artist, Gallery, Booking
 from .serializers import ArtistSerializer, GallerySerializer, BookingSerializer
 from rest_framework.permissions import IsAuthenticated
+from .utils import booking_confirmation
 
 # Create your views here.
 
@@ -12,7 +13,7 @@ class ArtistListView(generics.ListAPIView):
     serializer_class = ArtistSerializer
 
 
-class ArtistsDetailView(generics.RetrieveAPIView):
+class ArtistDetailView(generics.RetrieveAPIView):
     queryset = Gallery.objects.all()
     serializer_class = GallerySerializer
     lookup_field = "id"
@@ -35,13 +36,16 @@ class BookingListCreateView(generics.ListCreateAPIView):
 
     def get_queryset(self):
         return (
-            Booking.objects.select_related("user", "artist")
+            Booking.objects.select_related("user")
             .filter(user=self.request.user)
             .order_by("-created_at")
         )
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+        user = self.request.user
+        user_email = self.request.user.email
+        booking_confirmation(user, user_email)
 
     def get_serializer_context(self):
         context = super().get_serializer_context()

@@ -10,13 +10,11 @@ class ArtistSerializer(serializers.ModelSerializer):
 
 
 class BookingSerializer(serializers.ModelSerializer):
-    artist = serializers.PrimaryKeyRelatedField(queryset=Artist.objects.all())
 
     class Meta:
         model = Booking
         fields = [
             "id",
-            "artist",
             "session_date",
             "start_time",
             "end_time",
@@ -28,7 +26,6 @@ class BookingSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         user = self.context.get('user')
-        artist = data["artist"]
         session_date = data["session_date"]
         start_time = data["start_time"]
         end_time = data["end_time"]
@@ -36,9 +33,8 @@ class BookingSerializer(serializers.ModelSerializer):
         if start_time >= end_time:
             raise serializers.ValidationError("Start time must be before end time.")
 
-        # Check if this artist already has a booking that overlaps with the new time slot
+        # Check if there already exists a booking at that particular time and date
         overlapping_booking = Booking.objects.filter(
-            artist=artist,
             session_date=session_date,
             start_time__lt=end_time,
             end_time__gt=start_time,
@@ -47,6 +43,7 @@ class BookingSerializer(serializers.ModelSerializer):
         if overlapping_booking:
             raise serializers.ValidationError("This time slot has already been taken.")
 
+        # prevent the user from creating double bookings
         user_overlap = Booking.objects.filter(
             user=user,
             session_date=session_date,
