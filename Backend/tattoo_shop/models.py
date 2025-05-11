@@ -130,6 +130,7 @@ class Booking(models.Model):
 
 class Gallery(models.Model):
     id = models.BigAutoField(primary_key=True)
+    slug = models.SlugField(unique_for_date=True)
     image_url = models.URLField(blank=False)
     title = models.CharField(max_length=100, blank=True)
     description = models.TextField(blank=True)

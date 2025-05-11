@@ -10,11 +10,12 @@ class ArtistSerializer(serializers.ModelSerializer):
 
 
 class BookingSerializer(serializers.ModelSerializer):
+    artist = serializers.PrimaryKeyRelatedField(queryset=Artist.objects.all())
+
     class Meta:
         model = Booking
         fields = [
             "id",
-            "user",
             "artist",
             "session_date",
             "start_time",
@@ -23,10 +24,10 @@ class BookingSerializer(serializers.ModelSerializer):
             "tattoo_description",
             "created_at",
         ]
-        read_only_fields = ["user"]
+        read_only_fields = ["id", "status", "created_at"]
 
     def validate(self, data):
-        user = self.context["request"].user
+        user = self.context.get('user')
         artist = data["artist"]
         session_date = data["session_date"]
         start_time = data["start_time"]
@@ -64,4 +65,5 @@ class BookingSerializer(serializers.ModelSerializer):
 class GallerySerializer(serializers.ModelSerializer):
     class Meta:
         model = Gallery
-        fields = ["id", "image_url", "title", "description", "style", "uploaded_at"]
+        fields = ["id", "image_url", "slug", "title", "description", "style", "uploaded_at"]
+        read_only_fields = ['slug', 'uploaded_at']
