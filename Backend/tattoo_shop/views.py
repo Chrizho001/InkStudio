@@ -14,8 +14,8 @@ class ArtistListView(generics.ListAPIView):
 
 
 class ArtistDetailView(generics.RetrieveAPIView):
-    queryset = Gallery.objects.all()
-    serializer_class = GallerySerializer
+    queryset = Artist.objects.all()
+    serializer_class = ArtistSerializer
     lookup_field = "id"
 
 
@@ -42,10 +42,10 @@ class BookingListCreateView(generics.ListCreateAPIView):
         )
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        booking = serializer.save(user=self.request.user)
         user = self.request.user
         user_email = self.request.user.email
-        booking_confirmation(user, user_email)
+        booking_confirmation(user, user_email, booking)
 
     def get_serializer_context(self):
         context = super().get_serializer_context()

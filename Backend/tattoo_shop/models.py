@@ -4,6 +4,7 @@ from cloudinary.models import CloudinaryField
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.utils.text import slugify
 
 
 
@@ -99,11 +100,11 @@ class Booking(models.Model):
 
 class Gallery(models.Model):
     id = models.BigAutoField(primary_key=True)
-    slug = models.SlugField(unique_for_date=True)
+    slug = models.SlugField(max_length=150, blank=True, unique=True)
     image_url = models.URLField(blank=False)
-    title = models.CharField(max_length=100, blank=True)
+    title = models.CharField(max_length=150)
     description = models.TextField(blank=True)
-    style = models.CharField(max_length=50, blank=True)
+    style = models.CharField(max_length=100, blank=True)
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -111,6 +112,13 @@ class Gallery(models.Model):
             models.Index(fields=["title", "uploaded_at"]),
             models.Index(fields=["style"]),
         ]
+
+    
+    def save(self, *args, **kwargs):
+        if not self.slug and self.title:
+            self.slug = slugify(self.title)
+        super().save(*args, **kwargs)
+
 
     def __str__(self):
         return f"{self.title }"
