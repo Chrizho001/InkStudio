@@ -11,7 +11,7 @@ def send_booking_status_email(sender, instance, created, **kwargs):
     if not created and instance.status:
         # Send an email to the user whenever the status is updated
         subject = f"Your booking status has been updated!"
-        message = f"Hello {instance.user.first_name},\n\nYour booking with {instance.artist.name} has been updated to {instance.status}.\n\nThank you for using our service!"
+        message = f"Hello {instance.user.first_name},\n\nYour booking tattoo session booking on {instance.session_date} has been updated to {instance.status}.\n\nThank you for using our service!"
         recipient_list = [instance.user.email]
 
         # Send the email
