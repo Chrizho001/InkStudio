@@ -1,38 +1,18 @@
 from django.shortcuts import render
 from rest_framework import generics
-from .models import Artist, Gallery, Booking
-from .serializers import ArtistSerializer, GallerySerializer, BookingSerializer
+from .models import Booking
+from .serializers import BookingSerializer
 from rest_framework.permissions import IsAuthenticated
 from .utils import booking_confirmation
+from rest_framework.throttling import ScopedRateThrottle
 
 # Create your views here.
-
-
-class ArtistListView(generics.ListAPIView):
-    queryset = Artist.objects.all()
-    serializer_class = ArtistSerializer
-
-
-class ArtistDetailView(generics.RetrieveAPIView):
-    queryset = Artist.objects.all()
-    serializer_class = ArtistSerializer
-    lookup_field = "id"
-
-
-class GalleryListView(generics.ListAPIView):
-    queryset = Gallery.objects.all().order_by("-uploaded_at")
-    serializer_class = GallerySerializer
-
-
-class GalleryDetailView(generics.RetrieveAPIView):
-    queryset = Gallery.objects.all()
-    serializer_class = GallerySerializer
-    lookup_field = "slug"
 
 
 class BookingListCreateView(generics.ListCreateAPIView):
     serializer_class = BookingSerializer
     permission_classes = [IsAuthenticated]
+    throttle_scope = "bookings"
 
     def get_queryset(self):
         return (

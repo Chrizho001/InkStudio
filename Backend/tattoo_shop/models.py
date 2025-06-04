@@ -1,13 +1,9 @@
 import uuid
 from django.db import models
-from cloudinary.models import CloudinaryField
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.utils.text import slugify
-
-
-
 
 # Create your models here.
 
@@ -48,21 +44,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         return f"{self.first_name} {self.last_name} ({self.email})"
 
 
-class Artist(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField(max_length=200)
-    email = models.EmailField(unique=True)
-    bio = models.TextField(blank=True)
-    profile_image = models.URLField(blank=False)
-
-    class Meta:
-        indexes = [
-            models.Index(fields=["email"]),
-        ]
-
-    def __str__(self):
-        return self.name
-
 
 class Booking(models.Model):
     STATUS_CHOICES = (
@@ -97,28 +78,3 @@ class Booking(models.Model):
         return f"Booking {self.id} for {self.user}"
 
 
-
-class Gallery(models.Model):
-    id = models.BigAutoField(primary_key=True)
-    slug = models.SlugField(max_length=150, blank=True, unique=True)
-    image_url = models.URLField(blank=False)
-    title = models.CharField(max_length=150)
-    description = models.TextField(blank=True)
-    style = models.CharField(max_length=100, blank=True)
-    uploaded_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        indexes = [
-            models.Index(fields=["title", "uploaded_at"]),
-            models.Index(fields=["style"]),
-        ]
-
-    
-    def save(self, *args, **kwargs):
-        if not self.slug and self.title:
-            self.slug = slugify(self.title)
-        super().save(*args, **kwargs)
-
-
-    def __str__(self):
-        return f"{self.title }"

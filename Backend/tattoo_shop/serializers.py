@@ -1,12 +1,6 @@
 from rest_framework import serializers
-from .models import Artist, Booking, Gallery
+from .models import Booking
 from django.db.models import Q
-
-
-class ArtistSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Artist
-        fields = ["id", "name", "email", "bio", "profile_image"]
 
 
 class BookingSerializer(serializers.ModelSerializer):
@@ -57,10 +51,3 @@ class BookingSerializer(serializers.ModelSerializer):
             )
 
         return data
-
-
-class GallerySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Gallery
-        fields = ["id", "image_url", "slug", "title", "description", "style", "uploaded_at"]
-        read_only_fields = ['slug', 'uploaded_at']

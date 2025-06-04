@@ -10,7 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 from decouple import config
-import cloudinary
+
 
 from pathlib import Path
 import os
@@ -23,10 +23,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-@#v1#hmwev&qqc8f=*@kbnuy420ir+lzu40f2=r(7)9yjv49qf"
+SECRET_KEY = os.environ["SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -44,8 +44,6 @@ INSTALLED_APPS = [
     "tattoo_shop",
     "accounts",
     # third part apps
-    'cloudinary',
-    'cloudinary_storage',
     'rest_framework',
     'djoser',
     "corsheaders",
@@ -147,13 +145,6 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # Authentication
 AUTH_USER_MODEL = 'tattoo_shop.User'
 
-# Cloudinary configuration
-cloudinary.config(
-    cloud_name=config('CLOUDINARY_CLOUD_NAME'),
-    api_key=config('CLOUDINARY_API_KEY'),
-    api_secret=config('CLOUDINARY_API_SECRET'),
-    secure=True,  # Ensure HTTPS URLs
-)
 
 
 CORS_ALLOWED_ORIGINS= [
@@ -161,23 +152,14 @@ CORS_ALLOWED_ORIGINS= [
 ]
 
 
-# Email configuration for SendGrid
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_HOST = 'smtp.sendgrid.net'
-# EMAIL_PORT = 587
-# EMAIL_USE_TLS = True
-# EMAIL_HOST_USER = config('EMAIL_USER')
-# EMAIL_HOST_PASSWORD = config('SENDGRID_API_KEY')
-# DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL')
-
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
+EMAIL_HOST =os.environ['EMAIL_HOST']
+EMAIL_PORT =os.environ['EMAIL_PORT']
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'minato.kakashi365@gmail.com'  
-EMAIL_HOST_PASSWORD = 'hgzr tgeq mjag esgo'  
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+EMAIL_HOST_USER =os.environ['EMAIL_HOST_USER']
+EMAIL_HOST_PASSWORD=os.environ['EMAIL_HOST_PASSWORD'] 
+DEFAULT_FROM_EMAIL = os.environ['EMAIL_HOST_USER']
 
 
 # Djoser Authentication configurations
@@ -216,13 +198,13 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ),
     'DEFAULT_THROTTLE_CLASSES': [
-        'rest_framework.throttling.AnonRateThrottle',
-        'rest_framework.throttling.UserRateThrottle'
+        'rest_framework.throttling.ScopedRateThrottle',
     ],
     'DEFAULT_THROTTLE_RATES': {
-        'anon': '100/day',
-        'user': '1000/day'
+        'bookings': '5/hour',
     }
 }
+
+ALLOWED_HOSTS = ['ink-studio.onrender.com','localhost']
 
 

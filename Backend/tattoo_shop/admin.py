@@ -1,4 +1,4 @@
-from .models import Artist, Gallery, Booking
+from .models import Booking
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.utils.translation import gettext_lazy as _
@@ -7,25 +7,12 @@ from .models import User
 
 # Register your models here.
 
-
-@admin.register(Artist)
-class ArtistAdmin(admin.ModelAdmin):
-    list_display = ["id", "name", "email", "bio"]
-
-
 @admin.register(Booking)
 class BookingAdmin(admin.ModelAdmin):
     list_display = ["id", "user", "session_date", "start_time", "status"]
     list_filter = ["status", "session_date", "start_time", "user"]
     search_fields = ["tattoo_description", "user"]
     ordering = ["status", "created_at"]
-
-
-@admin.register(Gallery)
-class GalleryAdmin(admin.ModelAdmin):
-    list_display = ["id", "slug", "title", "description", "style"]
-    prepopulated_fields = {"slug": ("title",)}
-    list_filter = ["title", "uploaded_at"]
 
 
 @admin.register(User)
