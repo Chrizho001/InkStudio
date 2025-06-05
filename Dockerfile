@@ -12,6 +12,7 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 COPY Backend/requirements.txt .
 RUN uv pip install -r requirements.txt --system
 
+
 COPY Backend/ .
 
 # Copy and make entrypoint.sh executable

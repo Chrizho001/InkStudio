@@ -1,0 +1,22 @@
+# Don't include virtual environments
+Backend/env/
+__pycache__/
+*.pyc
+
+# Ignore Git stuff
+.git/
+.gitignore
+
+# Ignore environment config
+.env
+.env.*
+
+# Ignore system files
+.DS_Store
+*.swp
+
+# Ignore static files already collected
+staticfiles/
+
+Dockerfile
+docker-compose.yml
