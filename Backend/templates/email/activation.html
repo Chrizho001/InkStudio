@@ -1,0 +1,27 @@
+{% load i18n %}
+
+{% block subject %}
+{% blocktrans %}Activate your Ink Studio account{% endblocktrans %}
+{% endblock subject %}
+
+{% block text_body %}
+{% blocktrans %}You're receiving this email because you registered on Ink Studio.{% endblocktrans %}
+
+{% trans "Please click the link below to activate your account:" %}
+http://localhost:3000/auth/activate/{{ uid }}/{{ token }}
+
+{% trans "Thanks for choosing Ink Studio!" %}
+
+{% blocktrans %}The Ink Studio Team{% endblocktrans %}
+{% endblock text_body %}
+
+{% block html_body %}
+<p>{% blocktrans %}You're receiving this email because you registered on Ink Studio.{% endblocktrans %}</p>
+
+<p>{% trans "Please click the link below to activate your account:" %}</p>
+<p><a href="https://ink-studio-frontend.vercel.app/auth/activate/{{ uid }}/{{ token }}">Activate Account</a></p>
+
+<p>{% trans "Thanks for choosing Ink Studio!" %}</p>
+
+<p>{% blocktrans %}The Ink Studio Team{% endblocktrans %}</p>
+{% endblock html_body %}

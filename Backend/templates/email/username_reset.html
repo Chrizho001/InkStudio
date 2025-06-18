@@ -1,0 +1,21 @@
+{% load i18n %}
+
+{% block subject %}
+{% blocktrans %}Reset your Ink Studio username{% endblocktrans %}
+{% endblock subject %}
+
+{% block text_body %}
+{% trans "To reset your username, click the link below:" %}
+http://localhost:3000/auth/username/reset/confirm/{{ uid }}/{{ token }}
+
+{% trans "If you didn’t request a username reset, please ignore this email." %}
+
+{% blocktrans %}The Ink Studio Team{% endblocktrans %}
+{% endblock text_body %}
+
+{% block html_body %}
+<p>{% trans "To reset your username, click the link below:" %}</p>
+<p><a href="https://ink-studio-frontend.vercel.app/auth/username/reset/confirm/{{ uid }}/{{ token }}">Reset Username</a></p>
+<p>{% trans "If you didn’t request a username reset, please ignore this email." %}</p>
+<p>{% blocktrans %}The Ink Studio Team{% endblocktrans %}</p>
+{% endblock html_body %}

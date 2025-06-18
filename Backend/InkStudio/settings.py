@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 from decouple import config
+from datetime import timedelta
 
 
 from pathlib import Path
@@ -26,9 +27,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ["SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = config("DEBUG", default=False, cast=bool)
 
-ALLOWED_HOSTS = ["tattooapp.onrender.com"]
+ALLOWED_HOSTS = ["localhost","tattooapp.onrender.com", "127.0.0.1",]
 
 
 # Application definition
@@ -47,8 +48,11 @@ INSTALLED_APPS = [
     'rest_framework',
     'djoser',
     "corsheaders",
+    "anymail",
 
 ]
+
+
 
 
 
@@ -69,7 +73,7 @@ ROOT_URLCONF = "InkStudio.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        'DIRS': [BASE_DIR / "templates"],  # This line is key
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -86,6 +90,19 @@ WSGI_APPLICATION = "InkStudio.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
+
+
+
+
+
+
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.sqlite3",
+#         "NAME": BASE_DIR / "db.sqlite3",
+#     }
+# }
+
 
 
 
@@ -160,17 +177,22 @@ AUTH_USER_MODEL = 'tattoo_shop.User'
 
 CORS_ALLOWED_ORIGINS= [
     "http://localhost:3000",
+    "https://ink-studio-frontend.vercel.app"
 ]
 
 
+EMAIL_BACKEND = config("EMAIL_BACKEND")
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST =os.environ['EMAIL_HOST']
-EMAIL_PORT =os.environ['EMAIL_PORT']
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER =os.environ['EMAIL_HOST_USER']
-EMAIL_HOST_PASSWORD=os.environ['EMAIL_HOST_PASSWORD'] 
-DEFAULT_FROM_EMAIL = os.environ['EMAIL_HOST_USER']
+EMAIL_HOST_USER = config("EMAIL_HOST_USER")  # Use your Brevo email
+
+DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL")
+
+
+
+# AnyMail setup
+ANYMAIL = {
+    "SENDINBLUE_API_KEY": config("SENDINBLUE_API_KEY")
+}
 
 
 # Djoser Authentication configurations
@@ -183,7 +205,10 @@ DJOSER = {
     'SEND_CONFIRMATION_EMAIL' : True,
     'PASSWORD_RESET_CONFIRM_URL': 'password/reset/confirm/{uid}/{token}',
     'USERNAME_RESET_CONFIRM_URL': 'email/reset/confirm/{uid}/{token}',
-    'ACTIVATION_URL': 'activate/{uid}/{token}',
+    'ACTIVATION_URL': 'auth/activate/{uid}/{token}',
+    "EMAIL": {
+        "activation": "accounts.email.ActivationEmail",
+    },
     'SEND_ACTIVATION_EMAIL': True,
     'SET_PASSWORD_RETYPE' : True,
     'SET_USERNAME_RETYPE' : True,
@@ -192,11 +217,15 @@ DJOSER = {
         'user_delete': 'djoser.serializers.UserDeleteSerializer',
         'user': 'accounts.serializers.UserSerializer',
         'current_user': 'accounts.serializers.UserSerializer',
+        "password_reset": "djoser.serializers.PasswordResetSerializer",
+        "password_reset_confirm": "djoser.serializers.PasswordResetConfirmSerializer",
     },
 }
 
 SIMPLE_JWT = {
    'AUTH_HEADER_TYPES': ('JWT',),
+   "ACCESS_TOKEN_LIFETIME": timedelta(minutes=10),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=3), 
 } 
 
 
@@ -215,6 +244,9 @@ REST_FRAMEWORK = {
         'bookings': '5/hour',
     }
 }
+
+FRONTEND_URL = "https://ink-studio-frontend.vercel.app"
+
 
 
 
