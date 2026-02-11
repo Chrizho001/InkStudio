@@ -102,18 +102,6 @@ DATABASES = {
 }
 
 
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.postgresql",
-#         "NAME": os.environ["POSTGRES_DB"],
-#         "USER": os.environ["POSTGRES_USER"],
-#         "PASSWORD": os.environ["POSTGRES_PASSWORD"],
-#         "HOST": os.environ["DB_HOST"],
-#         "PORT": os.environ["DB_PORT"],
-#     }
-# }
-
-
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 
@@ -175,26 +163,11 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 
-# EMAIL_BACKEND = config("EMAIL_BACKEND")
-
-# EMAIL_HOST_USER = config("EMAIL_HOST_USER")  # Use your Brevo email
-
-# DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL")
-
-
-# AnyMail setup
-# ANYMAIL = {"SENDINBLUE_API_KEY": config("SENDINBLUE_API_KEY")}
-
-
 EMAIL_BACKEND = "anymail.backends.sendinblue.EmailBackend"
+EMAIL_HOST_USER = config("EMAIL_HOST_USER")
+DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL")
+ANYMAIL = {"SENDINBLUE_API_KEY": config("SENDINBLUE_API_KEY")}
 
-EMAIL_HOST_USER = "chrisfriday033@gmail.com"
-DEFAULT_FROM_EMAIL = "chrisfriday033@gmail.com"
-
-
-ANYMAIL = {
-    "SENDINBLUE_API_KEY": "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",
-}
 
 
 # Djoser Authentication configurations

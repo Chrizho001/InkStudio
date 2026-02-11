@@ -74,6 +74,7 @@ build/
 # =====================
 Dockerfile
 docker-compose.yml
+../docker-compose.yml
 .dockerignore
 docker-data/
 
@@ -89,3 +90,5 @@ docker-data/
 *.swo
 *.DS_Store
 entrypoint.sh
+
+.env
