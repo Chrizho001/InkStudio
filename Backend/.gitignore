@@ -1,0 +1,91 @@
+# =====================
+# Python / Django
+# =====================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.swp
+*.swo
+*.DS_Store
+*.env
+*.sqlite3
+*.log
+*.pot
+*.pyc
+
+# Virtual envs
+env/
+venv/
+ENV/
+.venv/
+
+# Django
+*.mo
+*.log
+db.sqlite3
+/staticfiles/
+*.coverage
+.coverage.*
+htmlcov/
+*.egg-info/
+dist/
+build/
+
+# Media files
+/media/
+
+# =====================
+# Node / React frontend
+# =====================
+node_modules/
+npm-debug.log*
+yarn-error.log*
+yarn-debug.log*
+package-lock.json
+yarn.lock
+*.env.local
+*.env.development.local
+*.env.test.local
+*.env.production.local
+/.next/
+out/
+build/
+
+# =====================
+# IDE / Editor
+# =====================
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.iml
+*.log
+
+# =====================
+# MacOS
+# =====================
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# =====================
+# Docker (optional since you removed it)
+# =====================
+Dockerfile
+docker-compose.yml
+.dockerignore
+docker-data/
+
+# =====================
+# Misc
+# =====================
+*.sqlite
+*.sqlite3-journal
+*.py[cod]
+*.bak
+*.tmp
+*.swp
+*.swo
+*.DS_Store
+entrypoint.sh

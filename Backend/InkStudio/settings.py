@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
+
 from decouple import config
 from datetime import timedelta
 
@@ -24,12 +25,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ["SECRET_KEY"]
+SECRET_KEY = config("SECRET_KEY")
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config("DEBUG", default=False, cast=bool)
 
-ALLOWED_HOSTS = ["localhost","tattooapp.onrender.com", "127.0.0.1",]
+ALLOWED_HOSTS = [
+    "localhost",
+    "tattooapp.onrender.com",
+    "127.0.0.1",
+]
 
 
 # Application definition
@@ -45,15 +51,11 @@ INSTALLED_APPS = [
     "tattoo_shop",
     "accounts",
     # third part apps
-    'rest_framework',
-    'djoser',
+    "rest_framework",
+    "djoser",
     "corsheaders",
     "anymail",
-
 ]
-
-
-
 
 
 MIDDLEWARE = [
@@ -73,7 +75,7 @@ ROOT_URLCONF = "InkStudio.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        'DIRS': [BASE_DIR / "templates"],  # This line is key
+        "DIRS": [BASE_DIR / "templates"],  # This line is key
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -92,31 +94,24 @@ WSGI_APPLICATION = "InkStudio.wsgi.application"
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 
-
-
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
+    }
+}
 
 
 # DATABASES = {
 #     "default": {
-#         "ENGINE": "django.db.backends.sqlite3",
-#         "NAME": BASE_DIR / "db.sqlite3",
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": os.environ["POSTGRES_DB"],
+#         "USER": os.environ["POSTGRES_USER"],
+#         "PASSWORD": os.environ["POSTGRES_PASSWORD"],
+#         "HOST": os.environ["DB_HOST"],
+#         "PORT": os.environ["DB_PORT"],
 #     }
 # }
-
-
-
-
-
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.environ["POSTGRES_DB"],
-        "USER": os.environ["POSTGRES_USER"],
-        "PASSWORD": os.environ["POSTGRES_PASSWORD"],
-        "HOST": os.environ["DB_HOST"],
-        "PORT": os.environ["DB_PORT"],
-    }
-}
 
 
 # Password validation
@@ -155,9 +150,9 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 
-STATICFILES_DIRS= [ BASE_DIR/ 'static' ]
+STATICFILES_DIRS = [BASE_DIR / "static"]
 
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 STORAGES = {
     "staticfiles": {
@@ -171,84 +166,83 @@ STORAGES = {
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Authentication
-AUTH_USER_MODEL = 'tattoo_shop.User'
+AUTH_USER_MODEL = "tattoo_shop.User"
 
 
-
-CORS_ALLOWED_ORIGINS= [
+CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
-    "https://ink-studio-frontend.vercel.app"
+    "https://ink-studio-frontend.vercel.app",
 ]
 
 
-EMAIL_BACKEND = config("EMAIL_BACKEND")
+# EMAIL_BACKEND = config("EMAIL_BACKEND")
 
-EMAIL_HOST_USER = config("EMAIL_HOST_USER")  # Use your Brevo email
+# EMAIL_HOST_USER = config("EMAIL_HOST_USER")  # Use your Brevo email
 
-DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL")
-
+# DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL")
 
 
 # AnyMail setup
+# ANYMAIL = {"SENDINBLUE_API_KEY": config("SENDINBLUE_API_KEY")}
+
+
+EMAIL_BACKEND = "anymail.backends.sendinblue.EmailBackend"
+
+EMAIL_HOST_USER = "chrisfriday033@gmail.com"
+DEFAULT_FROM_EMAIL = "chrisfriday033@gmail.com"
+
+
 ANYMAIL = {
-    "SENDINBLUE_API_KEY": config("SENDINBLUE_API_KEY")
+    "SENDINBLUE_API_KEY": "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",
 }
 
 
 # Djoser Authentication configurations
 DJOSER = {
-    'USER_ID_FIELD': 'id',
-    'LOGIN_FIELD' : 'email',
-    'USER_CREATE_PASSWORD_RETYPE': True,
-    'USERNAME_CHANGED_EMAIL_CONFIRMATION' : True,
-    'PASSWORD_CHANGED_EMAIL_CONFIRMATION' : True,
-    'SEND_CONFIRMATION_EMAIL' : True,
-    'PASSWORD_RESET_CONFIRM_URL': 'password/reset/confirm/{uid}/{token}',
-    'USERNAME_RESET_CONFIRM_URL': 'email/reset/confirm/{uid}/{token}',
-    'ACTIVATION_URL': 'auth/activate/{uid}/{token}',
+    "USER_ID_FIELD": "id",
+    "LOGIN_FIELD": "email",
+    "USER_CREATE_PASSWORD_RETYPE": True,
+    "USERNAME_CHANGED_EMAIL_CONFIRMATION": True,
+    "PASSWORD_CHANGED_EMAIL_CONFIRMATION": True,
+    "SEND_CONFIRMATION_EMAIL": True,
+    "PASSWORD_RESET_CONFIRM_URL": "password/reset/confirm/{uid}/{token}",
+    "USERNAME_RESET_CONFIRM_URL": "email/reset/confirm/{uid}/{token}",
+    "ACTIVATION_URL": "auth/activate/{uid}/{token}",
     "EMAIL": {
         "activation": "accounts.email.ActivationEmail",
     },
-    'SEND_ACTIVATION_EMAIL': True,
-    'SET_PASSWORD_RETYPE' : True,
-    'SET_USERNAME_RETYPE' : True,
-    'SERIALIZERS': {
-        'user_create': 'accounts.serializers.UserCreateSerializer',
-        'user_delete': 'djoser.serializers.UserDeleteSerializer',
-        'user': 'accounts.serializers.UserSerializer',
-        'current_user': 'accounts.serializers.UserSerializer',
+    "SEND_ACTIVATION_EMAIL": True,
+    "SET_PASSWORD_RETYPE": True,
+    "SET_USERNAME_RETYPE": True,
+    "SERIALIZERS": {
+        "user_create": "accounts.serializers.UserCreateSerializer",
+        "user_delete": "djoser.serializers.UserDeleteSerializer",
+        "user": "accounts.serializers.UserSerializer",
+        "current_user": "accounts.serializers.UserSerializer",
         "password_reset": "djoser.serializers.PasswordResetSerializer",
         "password_reset_confirm": "djoser.serializers.PasswordResetConfirmSerializer",
     },
 }
 
 SIMPLE_JWT = {
-   'AUTH_HEADER_TYPES': ('JWT',),
-   "ACCESS_TOKEN_LIFETIME": timedelta(minutes=10),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=3), 
-} 
+    "AUTH_HEADER_TYPES": ("JWT",),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=10),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=3),
+}
 
 
 # REST Framework settings
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
-    ),
-    'DEFAULT_THROTTLE_CLASSES': [
-        'rest_framework.throttling.ScopedRateThrottle',
+    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
+    "DEFAULT_THROTTLE_CLASSES": [
+        "rest_framework.throttling.ScopedRateThrottle",
     ],
-    'DEFAULT_THROTTLE_RATES': {
-        'bookings': '5/hour',
-    }
+    "DEFAULT_THROTTLE_RATES": {
+        "bookings": "5/hour",
+    },
 }
 
 FRONTEND_URL = "https://ink-studio-frontend.vercel.app"
-
-
-
-
-
-
