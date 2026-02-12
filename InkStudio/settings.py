@@ -29,11 +29,12 @@ SECRET_KEY = config("SECRET_KEY")
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config("DEBUG", default=False, cast=bool)
+DEBUG = True
+
 
 ALLOWED_HOSTS = [
+    "inkstudio-b3au.onrender.com",
     "localhost",
-    "tattooapp.onrender.com",
     "127.0.0.1",
 ]
 
@@ -167,7 +168,6 @@ EMAIL_BACKEND = "anymail.backends.sendinblue.EmailBackend"
 EMAIL_HOST_USER = config("EMAIL_HOST_USER")
 DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL")
 ANYMAIL = {"SENDINBLUE_API_KEY": config("SENDINBLUE_API_KEY")}
-
 
 
 # Djoser Authentication configurations
